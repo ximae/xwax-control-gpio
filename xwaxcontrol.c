@@ -323,9 +323,9 @@ pullUpDnControl(sf5,PUD_DOWN);
 pullUpDnControl(cst,PUD_DOWN);
 
 
-int a[8];
+int a[9];
 int i = 0;
-for ( i = 0; i < 9; i = i+1) { a[i] = 0; }
+for ( i = 0; i < 10; i = i+1) { a[i] = 0; }
 
   printf(" waiting...\n");
  
