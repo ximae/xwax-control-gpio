@@ -13,7 +13,7 @@
  *
  * compile:
  *
- * gcc -Wall -o keycontrol keycontrol.c rotaryencoder.c keysend.c -lwiringPi -lpthread
+ * gcc -Wall -o xwaxcontrol xwaxcontrol.c rotaryencoder.c keysend.c -lwiringPi -lpthread
  *
  */
 
@@ -323,9 +323,9 @@ pullUpDnControl(sf5,PUD_DOWN);
 pullUpDnControl(cst,PUD_DOWN);
 
 
-int a[24];
+int a[8];
 int i = 0;
-for ( i = 0; i < 24; i = i+1) { a[i] = 0; }
+for ( i = 0; i < 9; i = i+1) { a[i] = 0; }
 
   printf(" waiting...\n");
  
