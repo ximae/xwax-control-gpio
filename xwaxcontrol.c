@@ -67,33 +67,6 @@ long value;
   }
 }
 
-/* experimental set recorder thread */
-
-PI_THREAD (record) {
-
-   time_t rawtime;
-   struct tm *info;
-
-   char filename[80];
-   char command[100];
-
-   time( &rawtime );
-
-   info = localtime( &rawtime );
-   strftime(filename, 80, "%d_%m_%Y__%H_%M_%S", info);
-
-  strcpy( command, "arecord -f dat -D T6_pair1  --vumeter=stereo " );
-  
-  strcat(command , filename);
-  
-  strcat(command , ".wav");
-
-  system(command);
-  
-  return 0;
-
-} 
-
 /* pendrive mount and rescan function */
 
 
@@ -267,7 +240,10 @@ void myInterrupt10 (void) {
       {
 	debounceTime = millis () + DEBOUNCE_TIME ;
       }
-
+    else {
+	  penmount();
+	  delay(200);  
+      }
    while (digitalRead (cst) == HIGH) {
       delay (1) ;
       debounceTime = millis () + DEBOUNCE_TIME ;
@@ -372,26 +348,22 @@ while  ( a >= 0 ) {
      
    if ( a[0] > 0 ) {
      myInterrupt6();
-     if ( a[8] > 0) { a[0] = a[0]; }
-     else { a[0]= 0; }
+     a[0]= 0; 
     }
 
     if ( a[1] > 0 ) {
      myInterrupt7();
-     if ( a[8] > 0) { a[1] = a[1]; }
-     else { a[1]= 0; }
+     a[1]= 0; 
     }
 
    if ( a[2] > 0) {
       myInterrupt2();
-      if ( a[8] > 0) { a[2] = a[2]; }
-      else { a[2]= 0; }
+      a[2]= 0; 
     }
 
    if ( a[3]> 0 ) {
      myInterrupt5();
-     if ( a[8] > 0) { a[3] = a[3]; }
-     else { a[3]= 0; }
+     a[3]= 0; 
     } 
 
    if ( a[4]> 0) {
@@ -406,80 +378,19 @@ while  ( a >= 0 ) {
    
    if ( a[6] > 0 ) {
     myInterrupt8();
-     if ( a[8] > 0) { a[6] = a[6]; }
-     else { a[6]= 0; }
+    a[6]= 0; 
     }
 
     if ( a[7] > 0 ) {
      myInterrupt9();
-     if ( a[8] > 0) { a[7] = a[7]; }
-     else { a[7]= 0; }
+      a[7]= 0; 
     }
 
     if ( a[8] > 0 ) {
      myInterrupt10();
-     
+      a[8] = 0;
     } 
-     
-    /* Experimental switch combinations for extra functions ****** 
-     *                                                           *
-     *         rescan + f3 + f7 = system shutdown                *
-     *         rescan + right = screen keyboard (install onboard)*
-     *         rescan + left = rescan                            *        
-     *         rescan + clone 1  = record on pair 3              *
-     *         rescan + clone 2 = relaunch xwax                  *
-     *         rescan + f3 = toggle deck 1 control type          *
-     *         rescan + f7 = toggle deck 2 control type          *
-     *                                                           *
-     *************************************************************/
-
-
-    if ( a[8] > 0 && a[2] > 0 &&  a[3] > 0 ) {
-      system("shutdown -P now");
-      delay(200);
-      a[8] = a[2] = a[3] = 0;
-     } 
-
-    if ( a[8] > 0 && a[1] > 0 ) {
-       system("onboard");
-       delay(200);
-       a[8] = a[1] = 0;
-     }
-
-    if ( a[8] > 0 && a[0] > 0 ) {
-       penmount():
-       delay(200);
-       a[8] = a[0] = 0;
-     }
-
-    if ( a[8] > 0 && a[6] > 0 ) {
-      system("pkill xwax");  
-      piThreadCreate (record) ;
-      delay(200);
-      a[8] = a[6] = 0;
-     }
-
-    if ( a[8] > 0 && a[7] > 0 ) {
-      system ("pkill arecord");
-      system ("./home/odroid/Scripts/startxwax");
-      delay(200);
-      a[8] = a[7] = 0;
-     }
-
-    if ( a[8] > 0 && a[2] > 0 ) {
-      send_CF3();
-      delay(200);
-      a[8] = a[2] = 0;
-     }
-
-    if ( a[8] > 0 && a[3] > 0 ) {
-      send_CF7();
-      delay(200);
-      a[8] = a[3] = 0;
-     }
-
-     /* end of experimental swicth combinations */
-
+	
    usleep(10000);
   }
 
@@ -564,4 +475,93 @@ return 0;
    .....
    
 */   
-   
+
+/* experimental set recorder thread */
+
+/*
+PI_THREAD (record) {
+
+   time_t rawtime;
+   struct tm *info;
+
+   char filename[80];
+   char command[100];
+
+   time( &rawtime );
+
+   info = localtime( &rawtime );
+   strftime(filename, 80, "%d_%m_%Y__%H_%M_%S", info);
+
+  strcpy( command, "arecord -f dat -D T6_pair1  --vumeter=stereo " );
+  
+  strcat(command , filename);
+  
+  strcat(command , ".wav");
+
+  system(command);
+  
+  return 0;
+
+} 
+
+*/
+     
+    /* Experimental switch combinations for extra functions ****** 
+     *                                                           *
+     *         rescan + f3 + f7 = system shutdown                *
+     *         rescan + right = screen keyboard (install onboard)*
+     *         rescan + left = rescan                            *        
+     *         rescan + clone 1  = record on pair 3              *
+     *         rescan + clone 2 = relaunch xwax                  *
+     *         rescan + f3 = toggle deck 1 control type          *
+     *         rescan + f7 = toggle deck 2 control type          *
+     *                                                           *
+     *************************************************************/
+
+/*
+    if ( a[8] > 0 && a[2] > 0 &&  a[3] > 0 ) {
+      system("shutdown -P now");
+      delay(200);
+      a[8] = a[2] = a[3] = 0;
+     } 
+
+    if ( a[8] > 0 && a[1] > 0 ) {
+       system("onboard");
+       delay(200);
+       a[8] = a[1] = 0;
+     }
+
+    if ( a[8] > 0 && a[0] > 0 ) {
+       penmount():
+       delay(200);
+       a[8] = a[0] = 0;
+     }
+
+    if ( a[8] > 0 && a[6] > 0 ) {
+      system("pkill xwax");  
+      piThreadCreate (record) ;
+      delay(200);
+      a[8] = a[6] = 0;
+     }
+
+    if ( a[8] > 0 && a[7] > 0 ) {
+      system ("pkill arecord");
+      system ("./home/odroid/Scripts/startxwax");
+      delay(200);
+      a[8] = a[7] = 0;
+     }
+
+    if ( a[8] > 0 && a[2] > 0 ) {
+      send_CF3();
+      delay(200);
+      a[8] = a[2] = 0;
+     }
+
+    if ( a[8] > 0 && a[3] > 0 ) {
+      send_CF7();
+      delay(200);
+      a[8] = a[3] = 0;
+     }
+*/
+     /* end of experimental swicth combinations */
+ 
