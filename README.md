@@ -1,5 +1,5 @@
 
-interface control program for xwax. It uses the gpios available in the odroic c1 or c2 to connect switch buttons and a rotary to inject keypresses for the program interface control. This version uses a one pin per switch configuration and due to the odroids interrupt limitations in the gpio, a mix of polling and interrupt driver functions.
+interface control program for xwax. It uses the gpios available in the odroic c1 or c2 to connect switch buttons and a rotary to inject keypresses for the program interface control. This version uses a one pin per switch configuration and due to the odroids interrupt limitations in the gpio, a mix of gpio pin polling and gpio interrupt driven functions.
 
 needs the wiringpi library.
 
