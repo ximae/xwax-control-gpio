@@ -7,7 +7,13 @@ set up ur desired wiring pi pins in config.h
 
 I have left commented code in the main program for more available actions in xwax if you desire to add them.
 
-IF it is going to be used in a rpi, you can modify the program fora pure interrupt based version.
+IF it is going to be used in a rpi 2/3, you can modify the program for a pure interrupt based version:
+
+  expand on the wiringPiISR functions so it is reading all the pins/functions you need.
+  remove the pinMode and pullUpDnControl control functions for those pins.
+  remove the array and its initialization before the main loop
+  and empty the main while loop (all the if conditinals), even further slow it down if you want, so that it just locks the program    
+   while it waits for the interrupts on the wiringPiISR functions.
 
 
 How to test:
